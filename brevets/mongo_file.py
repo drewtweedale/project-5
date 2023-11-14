@@ -5,14 +5,6 @@ from pymongo import MongoClient
 
 # Set up MongoDB connection
 
-# Set up MongoDB connection
-client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
-
-# Use database "todo"
-db = client.brevetsdb
-
-# Use collection "lists" in the databse
-collection = db.lists
 
 ##################################################
 ################ MongoDB Functions ############### 

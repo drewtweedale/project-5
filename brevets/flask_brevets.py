@@ -12,6 +12,7 @@ import config
 from mongo_file import insert_brev, get_brev
 import logging
 from pymongo import MongoClient
+import traceback
 
 ###
 # Globals
@@ -24,11 +25,9 @@ CONFIG = config.configuration()
 ###
 
 # Set up MongoDB connection
-
-# Set up MongoDB connection
 client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
 
-# Use database "todo"
+# Use database "brevetsdb"
 db = client.brevetsdb
 
 # Use collection "lists" in the databse
@@ -87,16 +86,21 @@ def insert():
         # if successful, input_json is automatically parsed into a python dictionary!
         
         # Because input_json is a dictionary, we can do this:
-        brev_dist = input_json["brevet_dist_km"] # Should be a string
-        start_time = input_json["begin_date"] # Should be a string
+        brev_dist = input_json["brev_dist"] # Should be a string
+        start_time = input_json["start_time"] # Should be a string
         items = input_json["items"] # Should be a list of dictionaries
+        if len(items) == 0:
+            return flask.jsonify(
+                message ="No controle distances were entered.",
+                status = 0
+            )
         brev_id = insert_brev(collection, brev_dist, start_time, items)
 
         return flask.jsonify(result={},
                         message="Inserted!", 
                         status=1, # This is defined by you. You just read this value in your javascript.
                         mongo_id=brev_id)
-    except:
+    except Exception:
         # The reason for the try and except is to ensure Flask responds with a JSON.
         # If Flask catches your error, it means you didn't catch it yourself,
         # And Flask, by default, returns the error in an HTML.
