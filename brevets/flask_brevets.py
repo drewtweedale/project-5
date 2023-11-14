@@ -3,13 +3,15 @@ Replacement for RUSA ACP brevet time calculator
 (see https://rusa.org/octime_acp.html)
 
 """
+import os
 import flask
 from flask import request
 import arrow  # Replacement for datetime, based on moment.js
 import acp_times  # Brevet time calculations
 import config
-#import mongo_file
+from mongo_file import insert_brev, get_brev
 import logging
+from pymongo import MongoClient
 
 ###
 # Globals
@@ -21,6 +23,16 @@ CONFIG = config.configuration()
 # Pages
 ###
 
+# Set up MongoDB connection
+
+# Set up MongoDB connection
+client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
+
+# Use database "todo"
+db = client.brevetsdb
+
+# Use collection "lists" in the databse
+collection = db.lists
 
 @app.route("/")
 @app.route("/index")
@@ -78,8 +90,7 @@ def insert():
         brev_dist = input_json["brevet_dist_km"] # Should be a string
         start_time = input_json["begin_date"] # Should be a string
         items = input_json["items"] # Should be a list of dictionaries
-
-        brev_id = mongo_file.insert_brev(brev_dist, start_time, items)
+        brev_id = insert_brev(collection, brev_dist, start_time, items)
 
         return flask.jsonify(result={},
                         message="Inserted!", 
@@ -105,7 +116,7 @@ def fetch():
     JSON interface: gets JSON, responds with JSON
     """
     try:
-        brev_dist, start_time, items = mongo_file.get_brev()
+        brev_dist, start_time, items = get_brev(collection)
         return flask.jsonify(
                 result={"brevet_dist_km": brev_dist, "begin_date": start_time, "items": items}, 
                 status=1,

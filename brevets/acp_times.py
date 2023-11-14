@@ -80,7 +80,7 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
 
     # A rule that states if the brevet is 200km in length, the closing time
     # is 13H30 by default.
-    if brevet_dist_km == 200:
+    if control_dist_km == brevet_dist_km == 200:
         total_time = 13
         close_time_min = 30
     new_time = brevet_start_time.shift(hours=+int(total_time))

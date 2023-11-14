@@ -19,7 +19,7 @@ collection = db.lists
 ##################################################
 
 
-def get_brev():
+def get_brev(collection):
     """
     Obtains the newest document in the "lists" collection in database "brevetsdb".
 
@@ -44,7 +44,7 @@ def get_brev():
         return brev["brev_dist"], brev["start_time"], brev["items"]
 
 
-def insert_brev(brev_dist, start_time, items):
+def insert_brev(collection, brev_dist, start_time, items):
     """
     Inserts a new brev into the database "brevetsdb", under the collection "lists".
     

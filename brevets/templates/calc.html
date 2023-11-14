@@ -202,23 +202,18 @@
                         // and referencing by id (#).
 
                         var brev_dist = $("#brevet_dist_km").val();
-                        console.log("This is the distance:", brev_dist);
                         var controle_dist = $("input[name='km']").val(); 
-                        console.log("This is the controle dist:", controle_dist);
                         var start_time = $("input[name='begin_date']").val(); 
-                        console.log("This is the distance:", start_time);
                         var open_time = $("input[name='open']").val(); 
-                        console.log("This is the distance:", open_time);
                         var close_time = $("input[name='close']").val(); 
-                        console.log("This is the distance:", close_time);
 
 
                         // Empty array of list items that we will fill with a for loop
                         var items = [];
                         // For every row (go to line 52 and see ways to reference rows: by tag (tr) or
-                        // by class (listitem). Class is better because it's more specific in this case.
+                        // by class (control). Class is better because it's more specific in this case.
                         // And we don't want to accidentally pick up the table header row.
-                        $('.listitem').each(function() {
+                        $('.control').each(function() {
                             // Find the row object
                             var item = $(this);
                             // In this row, find description and priority
@@ -226,22 +221,28 @@
                             var o_time = item.find("input[name='open']").val();
                             var c_time = item.find("input[name='close']").val();
                             // If not empty, append to our list.
-                            if (km) {
+                            console.log("We are inside the control func. Here is the close time:", c_time);
+                            if (c_dist) {
                                 // Construct a dictionary
+                                console.log("WE ARE INSIDE THE IF STATEMENT")
                                 item_json = {
-                                    "km": description, 
+                                    "km": c_dist, 
                                     "open": o_time,
                                     "close": c_time
                                 }
                                 // Push to list
+                                console.log("Items pushed:", item_json)
                                 items.push(item_json);
+
                             }
+                            console.log("Total items:", items)
                         });
                         // Construct the data we will be sending Flask
                         var new_brev = {
                             "brev_dist": brev_dist,
                             "start_time": start_time,
                             "items": items};
+                        console.log("This is the entry into the database:", new_brev)
                         // Perfect! Now we have all the information that the user's entered
                         // into the form. All we have to do is send a POST request to have
                         // the backend store it in the database!
