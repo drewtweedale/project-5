@@ -66,6 +66,11 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
     if control_dist_km == 0:
         total_time = 1
         close_time_min = 0
+
+    # Final controles:
+    if control_dist_km >= brevet_dist_km:
+        control_dist_km = brevet_dist_km
+
     if 0 < control_dist_km <= 600:
         total_time = control_dist_km / 15
         close_time_min =  round((total_time - int(total_time)) * 60)
@@ -77,9 +82,6 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
         dist_remain = control_dist_km - 1000
         total_time = (600 / 15) + (400 / 11.428) + (dist_remain / 13.333)
         close_time_min =  round((total_time - int(total_time)) * 60)
-    # Final controles:
-    if control_dist_km >= brevet_dist_km:
-        control_dist_km = brevet_dist_km
 
     # A rule that states if the brevet is 200km in length, the closing time
     # is 13H30 by default.

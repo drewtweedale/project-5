@@ -24,14 +24,6 @@ CONFIG = config.configuration()
 # Pages
 ###
 
-# Set up MongoDB connection
-client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
-
-# Use database "brevetsdb"
-db = client.brevetsdb
-
-# Use collection "lists" in the databse
-collection = db.lists
 
 @app.route("/")
 @app.route("/index")
@@ -94,7 +86,7 @@ def insert():
                 message ="No controle distances were entered.",
                 status = 0
             )
-        brev_id = insert_brev(collection, brev_dist, start_time, items)
+        brev_id = insert_brev(brev_dist, start_time, items)
 
         return flask.jsonify(result={},
                         message="Inserted!", 
@@ -120,7 +112,7 @@ def fetch():
     JSON interface: gets JSON, responds with JSON
     """
     try:
-        brev_dist, start_time, items = get_brev(collection)
+        brev_dist, start_time, items = get_brev()
         return flask.jsonify(
                 result={"brevet_dist_km": brev_dist, "begin_date": start_time, "items": items}, 
                 status=1,

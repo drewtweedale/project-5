@@ -9,9 +9,16 @@ from pymongo import MongoClient
 ##################################################
 ################ MongoDB Functions ############### 
 ##################################################
+# Set up MongoDB connection
+client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
 
+# Use database "brevetsdb"
+db = client.brevetsdb
 
-def get_brev(collection):
+# Use collection "lists" in the databse
+collection = db.lists
+
+def get_brev():
     """
     Obtains the newest document in the "lists" collection in database "brevetsdb".
 
@@ -36,7 +43,7 @@ def get_brev(collection):
         return brev["brev_dist"], brev["start_time"], brev["items"]
 
 
-def insert_brev(collection, brev_dist, start_time, items):
+def insert_brev(brev_dist, start_time, items):
     """
     Inserts a new brev into the database "brevetsdb", under the collection "lists".
     
